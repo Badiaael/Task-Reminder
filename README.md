@@ -8,4 +8,4 @@ une application web de gestion des taches avec rappel
 ## Technologies
 HTML5 | CSS3 | JavaScript | php | mysql
 ## Lancer le projet
-Ouvrir index . html dans un navigateur web .
+Ouvrir dans un navigateur web avec XAMPP 
