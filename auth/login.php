@@ -1,12 +1,4 @@
 <?php
-// ============================================================
-//  auth/login.php
-//  MODIFIÉ :
-//    - Protection CSRF
-//    - Option "Se souvenir de moi" (cookie sécurisé)
-//    - Brute-force : délai artificiel sur échec
-//    - Message de succès après inscription
-// ============================================================
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../config/db.php';
 
@@ -25,8 +17,7 @@ if (empty($_SESSION['csrf_token'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    csrf_check(); // AJOUT
+    csrf_check();
 
     $email    = trim($_POST['email']    ?? '');
     $password =       $_POST['password'] ?? '';
@@ -37,13 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
-        // Régénère l'ID de session pour éviter la fixation de session — AJOUT
         session_regenerate_id(true);
-
         $_SESSION['user_id']  = $user['id'];
         $_SESSION['username'] = $user['username'];
 
-        // AJOUT : "Se souvenir de moi" — cookie 30 jours
         if ($remember) {
             $token = bin2hex(random_bytes(32));
             $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?")
@@ -59,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: " . BASE_URL . "tasks/dashboard.php");
         exit();
     } else {
-        // AJOUT : délai pour ralentir le brute-force
         sleep(1);
         $error = "Email ou mot de passe incorrect.";
     }
@@ -71,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Connexion — Task Reminder</title>
-  <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 <div class="glass-container">
@@ -87,16 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <form method="POST" action="">
     <?= csrf_field() ?>
-
     <input type="email"    name="email"    placeholder="Email" required
            value="<?= e($_POST['email'] ?? '') ?>">
     <input type="password" name="password" placeholder="Mot de passe" required>
-
-    <!-- AJOUT : case "Se souvenir de moi" -->
     <label class="checkbox-label">
       <input type="checkbox" name="remember"> Se souvenir de moi
     </label>
-
     <button type="submit">Connexion</button>
   </form>
   <a href="register.php">Créer un compte</a>
