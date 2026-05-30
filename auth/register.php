@@ -1,25 +1,15 @@
 <?php
-// ============================================================
-//  auth/register.php
-//  MODIFIÉ :
-//    - Validation des champs (longueur, format email)
-//    - Protection XSS avec e()
-//    - Token CSRF
-//    - Messages d'erreur distincts
-// ============================================================
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../config/db.php';
 
 session_set_cookie_params(['httponly' => true, 'samesite' => 'Strict']);
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Redirige si déjà connecté
 if (isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL . "tasks/dashboard.php");
     exit();
 }
 
-// Génère un token CSRF si absent
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -27,24 +17,18 @@ if (empty($_SESSION['csrf_token'])) {
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // AJOUT : vérification CSRF
     csrf_check();
 
     $username = trim($_POST['username'] ?? '');
     $email    = trim($_POST['email']    ?? '');
     $password =       $_POST['password'] ?? '';
 
-    // AJOUT : validations serveur
-    if (strlen($username) < 2 || strlen($username) > 100) {
+    if (strlen($username) < 2 || strlen($username) > 100)
         $errors[] = "Le nom doit contenir entre 2 et 100 caractères.";
-    }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         $errors[] = "Adresse email invalide.";
-    }
-    if (strlen($password) < 8) {
+    if (strlen($password) < 8)
         $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
-    }
 
     if (empty($errors)) {
         $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
@@ -67,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Inscription — Task Reminder</title>
-  <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
+  <!-- Chemin relatif depuis auth/ vers assets/css/ -->
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 <div class="glass-container">
@@ -82,18 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
 
   <form method="POST" action="">
-    <?= csrf_field() /* AJOUT token CSRF */ ?>
-
+    <?= csrf_field() ?>
     <input type="text"     name="username" placeholder="Nom d'utilisateur"
-           value="<?= e($_POST['username'] ?? '') ?>" required
-           minlength="2" maxlength="100">
-
+           value="<?= e($_POST['username'] ?? '') ?>" required minlength="2" maxlength="100">
     <input type="email"    name="email"    placeholder="Email"
            value="<?= e($_POST['email'] ?? '') ?>" required>
-
     <input type="password" name="password" placeholder="Mot de passe (8 car. min.)"
            required minlength="8">
-
     <button type="submit">S'inscrire</button>
   </form>
   <a href="login.php">Déjà un compte ? Connexion</a>
