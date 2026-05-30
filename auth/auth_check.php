@@ -4,6 +4,11 @@
 //  MODIFIÉ : session_start() sécurisé + support cookie "remember me"
 // ============================================================
 
+// AJOUT : charge helpers.php si BASE_URL pas encore définie
+if (!defined('BASE_URL')) {
+    require_once __DIR__ . '/../config/helpers.php';
+}
+
 // AJOUT : paramètres de session sécurisés
 session_set_cookie_params([
     'lifetime' => 0,
