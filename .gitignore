@@ -1,0 +1,40 @@
+# ============================================================
+#  TaskReminder — .gitignore
+# ============================================================
+
+# ── Configuration sensible ───────────────────────────────────
+config/db.php
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Système d'exploitation ───────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Éditeurs et IDE ──────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.user
+*.swp
+*.swo
+*~
+
+# ── Fichiers de build / outils ───────────────────────────────
+node_modules/
+dist/
+.cache/
+
+# ── Dépendances (si Composer ajouté plus tard) ───────────────
+vendor/
+composer.lock
+
+# ── Fichiers temporaires PHP ─────────────────────────────────
+*.tmp
+*.cache
+
+# ── Uploads utilisateurs (si ajoutés plus tard) ──────────────
+assets/uploads/
