@@ -1,0 +1,263 @@
+/* ============================================================
+   assets/css/style.css
+   MODIFIÉ :
+     - Alertes success / error
+     - Badges de priorité colorés
+     - Case à cocher "Se souvenir de moi"
+     - Bouton annuler + bouton reset recherche
+     - Cards "terminées" visuellement distinctes
+     - Responsive mobile amélioré
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap');
+
+/* ── Reset & base ────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Quicksand', Arial, sans-serif;
+  background: linear-gradient(135deg, #ffd6e8 0%, #ffc2d1 50%, #f8bbd0 100%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+/* ── Conteneurs principaux ───────────────────────────────────── */
+.glass-container,
+.dashboard {
+  width: 100%;
+  max-width: 1000px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 28px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 36px;
+  box-shadow: 0 8px 40px rgba(180, 60, 100, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+/* ── Typographie ─────────────────────────────────────────────── */
+h1, h2, h3 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 4px rgba(180,60,100,0.18);
+}
+h1 { font-size: 2rem; font-weight: 700; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.1rem; margin-bottom: 12px; }
+
+/* ── Alertes — AJOUT ─────────────────────────────────────────── */
+.alert {
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 18px;
+  font-size: .95rem;
+}
+.alert-error   { background: rgba(255,100,100,.2); color: #8b0000; border: 1px solid rgba(255,80,80,.4); }
+.alert-success { background: rgba(100,200,130,.2); color: #1a5c30; border: 1px solid rgba(80,200,100,.4); }
+.alert p { margin: 4px 0; }
+
+/* ── Formulaires ─────────────────────────────────────────────── */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="datetime-local"],
+textarea,
+select {
+  padding: 14px 18px;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.45);
+  outline: none;
+  color: #5e2b45;
+  font-family: inherit;
+  font-size: .97rem;
+  transition: border-color .2s, background .2s;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: #ff8fab;
+  background: rgba(255,255,255,.65);
+}
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── Case à cocher "Se souvenir de moi" — AJOUT ──────────────── */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #5e2b45;
+  font-size: .95rem;
+  cursor: pointer;
+}
+.checkbox-label input[type="checkbox"] {
+  width: 18px; height: 18px;
+  accent-color: #ff8fab;
+  cursor: pointer;
+  padding: 0; border: none; background: none;
+}
+
+/* ── Boutons & liens ─────────────────────────────────────────── */
+button,
+a.logout-btn,
+a.btn-cancel,
+a.btn-reset {
+  text-decoration: none;
+  padding: 13px 20px;
+  border-radius: 16px;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: .97rem;
+  font-weight: 600;
+  transition: background .25s, transform .15s;
+  display: inline-block;
+}
+
+button                { background: #ff8fab; color: #fff; }
+button:hover          { background: #fb6f92; transform: translateY(-1px); }
+a.logout-btn          { background: rgba(255,100,130,.25); color: #5e2b45; font-size: .9rem; padding: 8px 16px; }
+a.logout-btn:hover    { background: rgba(255,100,130,.4); }
+a.btn-cancel          { background: rgba(200,200,200,.35); color: #5e2b45; margin-top: 4px; }
+a.btn-cancel:hover    { background: rgba(200,200,200,.55); }
+a.btn-reset           { background: transparent; color: #5e2b45; padding: 13px 10px; text-decoration: underline; font-size: .9rem; }
+a.btn-delete          { background: rgba(255,80,80,.2); color: #7a1515; }
+a.btn-delete:hover    { background: rgba(255,80,80,.4); }
+a                     { color: #d4607a; text-decoration: none; }
+a:hover               { text-decoration: underline; }
+
+/* ── Barre du haut ───────────────────────────────────────────── */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.top-bar h1 { margin: 0; text-align: left; }
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.welcome { color: rgba(255,255,255,.9); font-size: .95rem; }
+
+/* ── Recherche ───────────────────────────────────────────────── */
+.search-form {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.search-form input { flex: 1; }
+
+/* ── Formulaire ajout ────────────────────────────────────────── */
+.task-form {
+  background: rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 28px;
+  border: 1px solid rgba(255,255,255,.3);
+}
+.task-form h3 { text-align: left; color: #fff; }
+
+/* ── Grille de tâches ────────────────────────────────────────── */
+.tasks-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 20px;
+}
+.no-tasks {
+  color: rgba(255,255,255,.8);
+  font-size: 1rem;
+  text-align: center;
+  grid-column: 1/-1;
+  padding: 30px;
+}
+
+/* ── Cards de tâche ──────────────────────────────────────────── */
+.task-card {
+  background: rgba(255,255,255,.28);
+  padding: 22px;
+  border-radius: 22px;
+  backdrop-filter: blur(10px);
+  color: #5e2b45;
+  border: 1.5px solid rgba(255,255,255,.45);
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.task-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(180,60,100,.15); }
+.task-card.task-done { opacity: .65; }
+
+/* Bordure colorée selon priorité — AJOUT */
+.priority-low    { border-left: 4px solid #6dbf7e; }
+.priority-medium { border-left: 4px solid #f5c842; }
+.priority-high   { border-left: 4px solid #e05252; }
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.task-header h3 { margin: 0; font-size: 1rem; color: #5e2b45; text-align: left; text-shadow: none; }
+
+/* ── Badges — AJOUT ──────────────────────────────────────────── */
+.badge {
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.badge-low    { background: #d4f4dc; color: #2a6b3b; }
+.badge-medium { background: #fef3c7; color: #7a5c00; }
+.badge-high   { background: #fee2e2; color: #7a1515; }
+
+.task-desc  { font-size: .9rem; color: #7a3d56; line-height: 1.5; }
+.task-date  { font-size: .85rem; color: #9a5070; }
+.task-status{ font-size: .85rem; }
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.buttons a {
+  flex: 1;
+  min-width: 90px;
+  padding: 9px 12px;
+  font-size: .88rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,.4);
+  color: #5e2b45;
+  text-align: center;
+  font-weight: 600;
+  transition: background .2s;
+}
+.buttons a:hover { background: rgba(255,255,255,.65); text-decoration: none; }
+
+/* ── Responsive mobile ───────────────────────────────────────── */
+@media (max-width: 600px) {
+  .glass-container, .dashboard { padding: 22px 14px; }
+  .top-bar { flex-direction: column; align-items: flex-start; }
+  .search-form { flex-direction: column; }
+  h1 { font-size: 1.4rem; }
+}
