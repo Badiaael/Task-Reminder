@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/db.php';
@@ -7,27 +6,28 @@ require_once __DIR__ . '/../config/db.php';
 $user_id = (int)$_SESSION['user_id'];
 $id      = (int)($_GET['id'] ?? 0);
 
-
 $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = ? AND user_id = ?");
 $stmt->execute([$id, $user_id]);
 $task = $stmt->fetch();
 
 if (!$task) {
-    
     http_response_code(403);
     die("Accès refusé.");
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    csrf_check(); // AJOUT
+    csrf_check();
 
     $title       = trim($_POST['title']       ?? '');
     $description = trim($_POST['description'] ?? '');
+    $priority    = valid_priority($_POST['priority'] ?? 'medium');  // ← manquait
+    $status      = valid_status($_POST['status']     ?? 'pending'); // ← manquait
+
+    if (strlen($title) < 1 || strlen($title) > 255) { // ← manquait le if
         die("Titre invalide.");
     }
 
-    
     $pdo->prepare(
         "UPDATE tasks
          SET title = ?, description = ?, priority = ?, status = ?
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Modifier la tâche — Task Reminder</title>
-  <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 <div class="glass-container">
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?= csrf_field() ?>
 
     <input type="text" name="title"
-           value="<?= e($task['title']) /* MODIFIÉ : protégé */ ?>"
+           value="<?= e($task['title']) ?>"
            required maxlength="255">
 
     <textarea name="description" rows="4"><?= e($task['description']) ?></textarea>
